@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <div class="grid grid-cols-1 xl:grid-cols-3 gap-4">
+    <div class="xl:col-span-2">
+      <div class="card">
+        <div class="flex items-start justify-between gap-4">
+          <div>
+            <div class="text-xs font-semibold uppercase tracking-wider text-slate-600">Rekomendasi</div>
+            <div class="mt-2 text-3xl font-semibold text-slate-900">{{ result.label }}</div>
+            <div class="mt-2 text-xs text-slate-500">Waktu prediksi: <span class="font-semibold">{{ result.latency_ms }}</span> ms</div>
+          </div>
+          <a href="/petani/prediksi" class="btn-secondary">Prediksi Baru</a>
+        </div>
+        <div class="mt-5 rounded-2xl border border-slate-200 p-4">
+          <div class="text-xs font-semibold uppercase tracking-wider text-slate-600">Probability per Kelas</div>
+          <div class="mt-3 h-64"><canvas id="probChart"></canvas></div>
+        </div>
+      </div>
+
+      <div class="mt-4 card">
+        <div class="text-sm font-semibold">Feature Contribution (Top)</div>
+        <div class="mt-1 text-xs text-slate-500">Kontribusi fitur untuk input ini (berdasarkan SHAP)</div>
+        <div class="mt-4 grid grid-cols-1 lg:grid-cols-2 gap-4">
+          <div class="rounded-2xl border border-slate-200 p-4">
+            <div class="text-xs font-semibold uppercase tracking-wider text-slate-600">Bar Chart</div>
+            <div class="mt-3 h-64"><canvas id="contribChart"></canvas></div>
+          </div>
+          <div class="rounded-2xl border border-slate-200 p-4">
+            <div class="text-xs font-semibold uppercase tracking-wider text-slate-600">Tabel</div>
+            <div class="mt-3 overflow-auto max-h-64">
+              <table class="min-w-full text-sm">
+                <thead class="sticky top-0 bg-white">
+                  <tr class="text-xs uppercase tracking-wider text-slate-500">
+                    <th class="text-left py-2">Fitur</th>
+                    <th class="text-left py-2">Nilai</th>
+                    <th class="text-right py-2">SHAP</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for c in result.top_contrib %}
+                    <tr class="border-t border-slate-200">
+                      <td class="py-2 font-semibold">{{ c.feature }}</td>
+                      <td class="py-2 text-slate-700">{{ c.value }}</td>
+                      <td class="py-2 text-right font-mono">{{ c.shap_value }}</td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="text-sm font-semibold">Input yang Digunakan</div>
+      <div class="mt-2 text-xs text-slate-500">Disimpan ke riwayat otomatis</div>
+      <div class="mt-4 space-y-2 text-sm">
+        {% for k, v in result.input.items() %}
+          <div class="flex items-center justify-between gap-3 rounded-xl border border-slate-200 px-3 py-2">
+            <div class="text-slate-600 uppercase tracking-wider text-[11px] font-semibold">{{ k }}</div>
+            <div class="font-semibold text-slate-900">{{ v }}</div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  <script>
+    window.__RESULT__ = {{ result_json | safe }}
+  </script>
+{% endblock %}
+

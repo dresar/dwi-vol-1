@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <div class="grid grid-cols-1 xl:grid-cols-4 gap-4">
+    <div class="card border-blue-100 bg-gradient-to-b from-blue-50 to-white">
+      <div class="card-label text-blue-700">Accuracy</div>
+      <div class="card-value">{{ metrics.accuracy }}</div>
+      <div class="card-sub">Model terakhir</div>
+    </div>
+    <div class="card border-blue-100 bg-gradient-to-b from-blue-50 to-white">
+      <div class="card-label text-blue-700">Precision</div>
+      <div class="card-value">{{ metrics.precision }}</div>
+      <div class="card-sub">Macro avg</div>
+    </div>
+    <div class="card border-blue-100 bg-gradient-to-b from-blue-50 to-white">
+      <div class="card-label text-blue-700">Recall</div>
+      <div class="card-value">{{ metrics.recall }}</div>
+      <div class="card-sub">Macro avg</div>
+    </div>
+    <div class="card border-blue-100 bg-gradient-to-b from-blue-50 to-white">
+      <div class="card-label text-blue-700">F1-score</div>
+      <div class="card-value">{{ metrics.f1 }}</div>
+      <div class="card-sub">Macro avg</div>
+    </div>
+  </div>
+
+  <div class="mt-6 grid grid-cols-1 xl:grid-cols-3 gap-4">
+    <div class="xl:col-span-2 card">
+      <div class="flex items-center justify-between">
+        <div>
+          <div class="text-sm font-semibold">Confusion Matrix</div>
+          <div class="text-xs text-slate-500">Visualisasi menggunakan stacked bar (Chart.js)</div>
+        </div>
+        <div class="text-xs text-slate-500">Trained at: <span class="font-semibold">{{ trained_at or '—' }}</span></div>
+      </div>
+      <div class="mt-4 h-80"><canvas id="cmChart"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="text-sm font-semibold">SHAP Summary Plot</div>
+      <div class="mt-1 text-xs text-slate-500">Transparansi global kontribusi fitur</div>
+      {% if shap_summary_url %}
+        <img class="mt-4 rounded-xl border border-slate-200" src="{{ shap_summary_url }}" alt="SHAP Summary" />
+      {% else %}
+        <div class="mt-4 text-sm text-slate-600">Belum ada plot. Jalankan training terlebih dahulu.</div>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="mt-4 card">
+    <div class="flex items-center justify-between">
+      <div>
+        <div class="text-sm font-semibold">Feature Importance</div>
+        <div class="text-xs text-slate-500">Top fitur paling berpengaruh pada model</div>
+      </div>
+    </div>
+    <div class="mt-4 h-96"><canvas id="fiChart"></canvas></div>
+  </div>
+
+  <script>
+    window.__EVAL__ = {{ eval_json | safe }}
+  </script>
+{% endblock %}
+

@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+    <div class="card">
+      <div class="card-label">Total Dataset</div>
+      <div class="card-value">{{ stats.total_datasets }}</div>
+      <div class="card-sub">Dataset pernah diunggah</div>
+    </div>
+    <div class="card">
+      <div class="card-label">Fitur Dataset Terakhir</div>
+      <div class="card-value">{{ stats.latest_feature_count }}</div>
+      <div class="card-sub">Jumlah fitur input</div>
+    </div>
+    <div class="card">
+      <div class="card-label">Akurasi Model Terakhir</div>
+      <div class="card-value">{{ stats.latest_accuracy }}</div>
+      <div class="card-sub">Evaluasi terakhir</div>
+    </div>
+    <div class="card">
+      <div class="card-label">Status Model</div>
+      <div class="card-value">{{ stats.model_status }}</div>
+      <div class="card-sub">Trained / Belum</div>
+    </div>
+  </div>
+
+  <div class="mt-6 grid grid-cols-1 xl:grid-cols-3 gap-4">
+    <div class="xl:col-span-2 card p-0 overflow-hidden">
+      <div class="px-5 py-4 border-b border-slate-200 flex items-center justify-between">
+        <div>
+          <div class="text-sm font-semibold">Ringkasan Evaluasi</div>
+          <div class="text-xs text-slate-500">Confusion matrix dan metrik model terakhir</div>
+        </div>
+        <a href="/admin/evaluasi" class="btn-secondary">Buka Evaluasi</a>
+      </div>
+      <div class="p-5">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          <div class="rounded-xl border border-slate-200 p-4">
+            <div class="text-xs font-semibold uppercase tracking-wider text-slate-600">Confusion (Stacked Bar)</div>
+            <div class="mt-3 h-56"><canvas id="cmChart"></canvas></div>
+          </div>
+          <div class="rounded-xl border border-slate-200 p-4">
+            <div class="text-xs font-semibold uppercase tracking-wider text-slate-600">Feature Importance</div>
+            <div class="mt-3 h-56"><canvas id="fiChart"></canvas></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card p-0 overflow-hidden">
+      <div class="px-5 py-4 border-b border-slate-200">
+        <div class="text-sm font-semibold">Aksi Cepat</div>
+        <div class="text-xs text-slate-500">Kelola dataset dan model</div>
+      </div>
+      <div class="p-5 space-y-3">
+        <a class="btn-primary w-full justify-center" href="/admin/upload-dataset">
+          <i class="fa-solid fa-upload mr-2"></i> Upload Dataset
+        </a>
+        <a class="btn-secondary w-full justify-center" href="/admin/training">
+          <i class="fa-solid fa-brain mr-2"></i> Training Model
+        </a>
+        <a class="btn-secondary w-full justify-center" href="/admin/log-aktivitas">
+          <i class="fa-solid fa-list-check mr-2"></i> Log Aktivitas
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    window.__MODEL_CHARTS__ = {{ charts_json | safe }}
+  </script>
+{% endblock %}
+

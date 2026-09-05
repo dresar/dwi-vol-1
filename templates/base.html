@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{{ title or 'Sistem Rekomendasi Musim Tanam' }}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <link rel="stylesheet" href="/static/app.css" />
+  </head>
+  <body class="bg-slate-50 text-slate-900">
+    <div class="min-h-screen flex">
+      <aside class="w-[260px] shrink-0 bg-white border-r border-slate-200">
+        <div class="h-16 px-5 flex items-center gap-3 border-b border-slate-200">
+          <div class="w-10 h-10 rounded-2xl bg-blue-600 text-white flex items-center justify-center shadow-sm">
+            <i class="fa-solid fa-seedling"></i>
+          </div>
+          <div class="leading-tight">
+            <div class="text-sm font-semibold">Rekomendasi Musim Tanam</div>
+            <div class="text-xs text-slate-500">Random Forest + SHAP</div>
+          </div>
+        </div>
+
+        <div class="px-3 py-4">
+          <div class="px-3 py-2 rounded-xl bg-blue-50 border border-blue-100">
+            <div class="text-xs text-blue-700 font-semibold">{{ session_user.username }}</div>
+            <div class="mt-0.5 text-[11px] text-slate-600 uppercase tracking-wider">{{ session_user.role }}</div>
+          </div>
+
+          <nav class="mt-4 space-y-1">
+            <a href="/dashboard" class="nav-item {% if active == 'dashboard' %}nav-active{% endif %}">
+              <i class="fa-solid fa-chart-line w-5"></i>
+              <span>Dashboard</span>
+            </a>
+
+            {% if session_user.role == 'admin' %}
+              <a href="/admin/upload-dataset" class="nav-item {% if active == 'upload' %}nav-active{% endif %}">
+                <i class="fa-solid fa-upload w-5"></i>
+                <span>Upload Dataset</span>
+              </a>
+              <a href="/admin/training" class="nav-item {% if active == 'training' %}nav-active{% endif %}">
+                <i class="fa-solid fa-brain w-5"></i>
+                <span>Training Model</span>
+              </a>
+              <a href="/admin/evaluasi" class="nav-item {% if active == 'evaluasi' %}nav-active{% endif %}">
+                <i class="fa-solid fa-chart-pie w-5"></i>
+                <span>Evaluasi Model</span>
+              </a>
+              <a href="/admin/transparansi" class="nav-item {% if active == 'transparansi' %}nav-active{% endif %}">
+                <i class="fa-solid fa-circle-nodes w-5"></i>
+                <span>Transparansi Model</span>
+              </a>
+              <a href="/admin/log-aktivitas" class="nav-item {% if active == 'log' %}nav-active{% endif %}">
+                <i class="fa-solid fa-list-check w-5"></i>
+                <span>Log Aktivitas</span>
+              </a>
+            {% else %}
+              <a href="/petani/prediksi" class="nav-item {% if active == 'prediksi' %}nav-active{% endif %}">
+                <i class="fa-solid fa-wand-magic-sparkles w-5"></i>
+                <span>Prediksi Musim Tanam</span>
+              </a>
+              <a href="/petani/riwayat" class="nav-item {% if active == 'riwayat' %}nav-active{% endif %}">
+                <i class="fa-solid fa-clock-rotate-left w-5"></i>
+                <span>Riwayat Prediksi</span>
+              </a>
+            {% endif %}
+
+            <div class="pt-3">
+              <a href="/logout" class="nav-item">
+                <i class="fa-solid fa-sign-out-alt w-5"></i>
+                <span>Logout</span>
+              </a>
+            </div>
+          </nav>
+        </div>
+      </aside>
+
+      <main class="flex-1 min-w-0">
+        <header class="h-16 bg-white border-b border-slate-200 px-6 flex items-center justify-between">
+          <div>
+            <div class="text-sm font-semibold">{{ page_title or title or 'Dashboard' }}</div>
+            <div class="text-xs text-slate-500">{{ page_subtitle or '' }}</div>
+          </div>
+          <div class="flex items-center gap-3">
+            {% if flash %}
+              <div class="hidden md:block text-xs px-3 py-1.5 rounded-full bg-blue-50 border border-blue-100 text-blue-700">{{ flash }}</div>
+            {% endif %}
+          </div>
+        </header>
+
+        <div class="p-6">
+          {% block content %}{% endblock %}
+        </div>
+      </main>
+    </div>
+    <script src="/static/app.js"></script>
+  </body>
+</html>
+

@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <div class="grid grid-cols-1 xl:grid-cols-3 gap-4">
+    <div class="xl:col-span-2 card">
+      <div class="flex items-start justify-between gap-4">
+        <div>
+          <div class="text-sm font-semibold">Upload Dataset Training (CSV)</div>
+          <div class="mt-1 text-xs text-slate-500">File disimpan di folder <span class="font-semibold">/data</span>. Database hanya menyimpan path & metadata.</div>
+        </div>
+        <div class="text-xs px-3 py-1.5 rounded-full bg-blue-50 border border-blue-100 text-blue-700">Admin Only</div>
+      </div>
+
+      {% if error %}
+        <div class="mt-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">{{ error }}</div>
+      {% endif %}
+      {% if ok %}
+        <div class="mt-4 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">{{ ok }}</div>
+      {% endif %}
+
+      <form method="post" action="/admin/upload-dataset" enctype="multipart/form-data" class="mt-5">
+        <div data-dropzone class="rounded-2xl border-2 border-dashed border-slate-200 bg-slate-50 hover:bg-slate-100 transition p-8 text-center">
+          <div class="mx-auto w-12 h-12 rounded-2xl bg-blue-600 text-white flex items-center justify-center shadow-sm">
+            <i class="fa-solid fa-upload"></i>
+          </div>
+          <div class="mt-3 text-sm font-semibold">Drag & drop file CSV di sini</div>
+          <div class="mt-1 text-xs text-slate-500">atau klik untuk memilih file</div>
+          <input data-file-input class="mt-4 block w-full text-sm text-slate-600 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:bg-blue-600 file:text-white file:font-semibold hover:file:bg-blue-700" type="file" name="file" accept=".csv,text/csv" required />
+        </div>
+
+        <div class="mt-4 flex items-center gap-3">
+          <button type="submit" class="btn-primary">
+            <i class="fa-solid fa-upload mr-2"></i> Upload Dataset
+          </button>
+          <a href="/admin/training" class="btn-secondary">Lanjut Training</a>
+        </div>
+      </form>
+    </div>
+
+    <div class="card">
+      <div class="text-sm font-semibold">Kolom Wajib (Default)</div>
+      <div class="mt-2 text-xs text-slate-500">Sistem akan memvalidasi minimal fitur inti + target.</div>
+      <ul class="mt-4 space-y-2 text-sm text-slate-700">
+        {% for c in required_columns %}
+          <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-blue-700"></i> {{ c }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+
+  <div class="mt-6 card p-0 overflow-hidden">
+    <div class="px-5 py-4 border-b border-slate-200">
+      <div class="text-sm font-semibold">Dataset Terakhir</div>
+      <div class="text-xs text-slate-500">Informasi dataset yang paling baru diunggah</div>
+    </div>
+    <div class="p-5 overflow-x-auto">
+      {% if latest %}
+        <table class="min-w-full text-sm">
+          <tbody class="divide-y divide-slate-200">
+            <tr><td class="py-2 text-slate-500">File</td><td class="py-2 font-semibold">{{ latest.filename }}</td></tr>
+            <tr><td class="py-2 text-slate-500">Row</td><td class="py-2 font-semibold">{{ latest.row_count }}</td></tr>
+            <tr><td class="py-2 text-slate-500">Fitur</td><td class="py-2 font-semibold">{{ latest.feature_count }}</td></tr>
+            <tr><td class="py-2 text-slate-500">Target</td><td class="py-2 font-semibold">{{ latest.target_column }}</td></tr>
+            <tr><td class="py-2 text-slate-500">Uploaded</td><td class="py-2 font-semibold">{{ latest.created_at }}</td></tr>
+          </tbody>
+        </table>
+      {% else %}
+        <div class="text-sm text-slate-600">Belum ada dataset diunggah.</div>
+      {% endif %}
+    </div>
+  </div>
+{% endblock %}
+

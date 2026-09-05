@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <div class="card">
+    <div class="flex items-center justify-between">
+      <div>
+        <div class="text-sm font-semibold">Log Aktivitas</div>
+        <div class="text-xs text-slate-500">Audit ringkas aktivitas penting</div>
+      </div>
+    </div>
+
+    <div class="mt-4 overflow-x-auto">
+      <table class="min-w-full text-sm">
+        <thead>
+          <tr class="text-xs uppercase tracking-wider text-slate-500">
+            <th class="text-left py-2">Waktu</th>
+            <th class="text-left py-2">Aktor</th>
+            <th class="text-left py-2">Role</th>
+            <th class="text-left py-2">Aksi</th>
+            <th class="text-left py-2">Detail</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for r in rows %}
+            <tr class="border-t border-slate-200">
+              <td class="py-2 whitespace-nowrap">{{ r.created_at }}</td>
+              <td class="py-2 font-semibold">{{ r.actor_username or '-' }}</td>
+              <td class="py-2 uppercase text-xs tracking-wider">{{ r.actor_role or '-' }}</td>
+              <td class="py-2 font-semibold">{{ r.action }}</td>
+              <td class="py-2 font-mono text-xs text-slate-600 max-w-[520px] truncate" title="{{ r.detail_json }}">{{ r.detail_json }}</td>
+            </tr>
+          {% endfor %}
+          {% if rows|length == 0 %}
+            <tr class="border-t border-slate-200"><td colspan="5" class="py-4 text-center text-slate-500">Belum ada log</td></tr>
+          {% endif %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+{% endblock %}
+

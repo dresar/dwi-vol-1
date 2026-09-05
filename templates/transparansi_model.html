@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <div class="grid grid-cols-1 xl:grid-cols-3 gap-4">
+    <div class="xl:col-span-2 card">
+      <div class="text-sm font-semibold">Transparansi Model (Global)</div>
+      <div class="mt-1 text-xs text-slate-500">Ringkasan kontribusi fitur dan interpretasi singkat</div>
+      <div class="mt-4 grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <div class="rounded-2xl border border-slate-200 p-4">
+          <div class="text-xs font-semibold uppercase tracking-wider text-slate-600">Top Feature Importance</div>
+          <div class="mt-3 h-64"><canvas id="fiChart"></canvas></div>
+        </div>
+        <div class="rounded-2xl border border-slate-200 p-4">
+          <div class="text-xs font-semibold uppercase tracking-wider text-slate-600">Catatan Interpretasi</div>
+          <div class="mt-3 text-sm text-slate-700 leading-relaxed">
+            Gunakan feature importance dan SHAP untuk memahami faktor utama yang mendorong rekomendasi musim tanam.
+            Pastikan input Petani sesuai kondisi lapangan agar rekomendasi tetap relevan.
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="text-sm font-semibold">SHAP Summary Plot</div>
+      <div class="mt-1 text-xs text-slate-500">Kontribusi global fitur terhadap output</div>
+      {% if shap_summary_url %}
+        <img class="mt-4 rounded-xl border border-slate-200" src="{{ shap_summary_url }}" alt="SHAP Summary" />
+      {% else %}
+        <div class="mt-4 text-sm text-slate-600">Belum tersedia. Jalankan training.</div>
+      {% endif %}
+    </div>
+  </div>
+
+  <script>
+    window.__TRANSPARENCY__ = {{ transparency_json | safe }}
+  </script>
+{% endblock %}
+

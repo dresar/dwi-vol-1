@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <div class="card">
+    <div class="flex items-center justify-between">
+      <div>
+        <div class="text-sm font-semibold">Riwayat Prediksi</div>
+        <div class="text-xs text-slate-500">Daftar prediksi yang tersimpan</div>
+      </div>
+      <a href="/petani/prediksi" class="btn-primary">Prediksi Baru</a>
+    </div>
+
+    <div class="mt-4 overflow-x-auto">
+      <table class="min-w-full text-sm">
+        <thead>
+          <tr class="text-xs uppercase tracking-wider text-slate-500">
+            <th class="text-left py-2">Waktu</th>
+            <th class="text-left py-2">Hasil</th>
+            <th class="text-right py-2">Aksi</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for r in rows %}
+            <tr class="border-t border-slate-200">
+              <td class="py-2">{{ r.created_at }}</td>
+              <td class="py-2 font-semibold">{{ r.label }}</td>
+              <td class="py-2 text-right"><a href="/petani/result/{{ r.id }}" class="text-blue-700 hover:text-blue-800 font-semibold">Detail</a></td>
+            </tr>
+          {% endfor %}
+          {% if rows|length == 0 %}
+            <tr class="border-t border-slate-200"><td colspan="3" class="py-4 text-center text-slate-500">Belum ada data</td></tr>
+          {% endif %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+{% endblock %}
+
